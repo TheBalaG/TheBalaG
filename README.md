@@ -1,4 +1,4 @@
-- Heya, this is <b>@TheBalaG<b>;
+- Heya, this is <b>@TheBalaG</b>;
 - Trying to be jack of all and master of it too;
 - Hope i'll learn ML & AI before AI took over this world;
 - var collaborative = True;
