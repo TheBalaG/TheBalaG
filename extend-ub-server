@@ -1,0 +1,52 @@
+It seems like your Ubuntu system is using LVM (Logical Volume Management), and the partition sda3 has 13.2 GB of space, but the logical volume ubuntu-vg-ubuntu--lv is only using 10 GB. LVM allows you to resize the logical volumes (LV) dynamically, so you can extend ubuntu-vg-ubuntu--lv to use the remaining space from sda3.
+
+Here's how you can increase the size of the logical volume to utilize the available space:
+
+Step 1: Check available free space in the Volume Group
+First, check how much free space is available in your Volume Group (ubuntu-vg).
+
+Run the following command:
+
+bash
+Copy code
+sudo vgdisplay ubuntu-vg
+Look for the "Free PE / Size" line. This will tell you how much unallocated space is available in the volume group.
+
+Step 2: Extend the Logical Volume
+If there is free space available in the volume group, you can extend the logical volume. Use the lvextend command to extend ubuntu-vg-ubuntu--lv.
+
+For example, to extend it by 3.2 GB (to match the available space), run:
+
+bash
+Copy code
+sudo lvextend -L +3.2G /dev/ubuntu-vg/ubuntu--lv
+If you want to use all the available space in the volume group, you can use:
+
+bash
+Copy code
+sudo lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu--lv
+Step 3: Resize the Filesystem
+After extending the logical volume, you need to resize the filesystem to use the new space. Depending on your filesystem type, the command will differ. For example, if you are using the ext4 filesystem:
+
+bash
+Copy code
+sudo resize2fs /dev/ubuntu-vg/ubuntu--lv
+If you're using xfs, use:
+
+bash
+Copy code
+sudo xfs_growfs /dev/ubuntu-vg/ubuntu--lv
+Step 4: Verify the Changes
+After resizing, you can check if the logical volume and filesystem size have been updated using:
+
+bash
+Copy code
+df -h
+This should show the updated size for the root filesystem (or whichever filesystem is using the logical volume).
+
+Step 5: Check the Logical Volume and Volume Group
+You can double-check the logical volume and volume group details with:
+
+sudo lvdisplay
+sudo vgdisplay
+By following these steps, you should be able to utilize the full 13.2 GB of space in sda3 for your logical volume. Let me know if you encounter any issues!
